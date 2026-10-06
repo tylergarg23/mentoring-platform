@@ -1,0 +1,55 @@
+---
+import { ArrowUpRight } from 'lucide-astro';
+
+import { mentorshipPackages } from '../../data/mentorship';
+
+const formatPrice = (price: number) => `S/ ${price}`;
+---
+
+<section id="paquetes" class="mentorship-section" aria-labelledby="packages-title">
+  <div class="section-kicker">/ ELIGE TU RITMO</div>
+
+  <h2 id="packages-title" class="mentorship-heading">
+    Una mentoría
+    <br />
+    <span>a tu medida.</span>
+  </h2>
+
+  <div class="package-grid">
+    {mentorshipPackages.map((item, index) => (
+      <article class:list={['package-card', { 'featured-package': item.featured }]}>
+        <div class="package-top">
+          <span>0{index + 1}</span>
+          <span>{item.tone}</span>
+        </div>
+
+        <h3>{item.name}</h3>
+
+        <div class="package-price">
+          {formatPrice(item.price)}
+          <small>/ paquete</small>
+        </div>
+
+        <p>{item.description}</p>
+
+        <div class="audience">
+          <span>Dirigido a</span>
+          <strong>{item.audience}</strong>
+        </div>
+
+        <button
+          type="button"
+          class="button button-primary package-button"
+          data-mentorship={item.id}
+          data-name={item.name}
+          data-price={item.price}
+          data-sessions={item.sessions}
+          data-description={item.description}
+        >
+          Adquirir mentoría
+          <ArrowUpRight aria-hidden="true" />
+        </button>
+      </article>
+    ))}
+  </div>
+</section>

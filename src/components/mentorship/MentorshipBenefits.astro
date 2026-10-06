@@ -1,0 +1,29 @@
+---
+import { Check } from 'lucide-astro';
+
+import { mentorshipBenefits } from '../../data/mentorship';
+---
+
+<section class="mentorship-section benefits-section" aria-labelledby="benefits-title">
+  <div class="section-kicker">/ LO QUE TE LLEVAS</div>
+
+  <div class="benefits-grid">
+    <h2 id="benefits-title" class="mentorship-heading">
+      Más que una
+      <br />
+      <span>conversación.</span>
+    </h2>
+
+    <div class="benefit-list">
+      {mentorshipBenefits.map((benefit, index) => (
+        <div class="benefit-item">
+          <Check aria-hidden="true" />
+
+          <span>0{index + 1}</span>
+
+          <strong>{benefit}</strong>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

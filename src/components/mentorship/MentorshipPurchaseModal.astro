@@ -1,0 +1,620 @@
+---
+import { ArrowUpRight, CreditCard, Smartphone, X } from 'lucide-astro';
+---
+
+<div class="modal-backdrop" data-purchase-modal aria-hidden="true" hidden>
+  <div
+    class="purchase-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="purchase-title"
+    tabindex="-1"
+    data-modal-content
+  >
+    <button type="button" class="modal-close" aria-label="Cerrar ventana" data-modal-close>
+      <X aria-hidden="true" />
+    </button>
+
+    <div class="section-kicker">/ RESERVAR MENTORÍA</div>
+
+    <h2 id="purchase-title">
+      <span data-package-name>Mentoría</span>
+      <br />
+      <em>es para ti.</em>
+    </h2>
+
+    <p data-package-description></p>
+
+    <div class="modal-package-summary">
+      <span data-package-sessions></span>
+
+      <strong data-package-price></strong>
+    </div>
+
+    <fieldset class="payment-methods">
+      <legend>Elige tu medio de pago</legend>
+
+      <div class="payment-options">
+        <button
+          type="button"
+          class="payment-option is-active"
+          data-payment-method="card"
+          aria-pressed="true"
+        >
+          <CreditCard aria-hidden="true" />
+
+          <span>
+            <strong>Tarjeta</strong>
+            <small>Crédito o débito</small>
+          </span>
+        </button>
+
+        <button
+          type="button"
+          class="payment-option"
+          data-payment-method="yape"
+          aria-pressed="false"
+        >
+          <Smartphone aria-hidden="true" />
+
+          <span>
+            <strong>Yape</strong>
+            <small>Pago desde tu billetera</small>
+          </span>
+        </button>
+      </div>
+    </fieldset>
+
+    <!-- ========================================
+     TARJETA
+     ======================================== -->
+
+    <div class="payment-form is-active" data-payment-form="card">
+      <div class="payment-form-heading">
+        <h3>Ingresa tu información de pago</h3>
+
+        <p>Verifica que tu tarjeta esté activa y habilitada para realizar compras online.</p>
+      </div>
+
+      <div class="payment-fields">
+        <label class="payment-field payment-field-full">
+          <span>Número de tarjeta</span>
+
+          <div class="payment-input">
+            <input
+              type="text"
+              inputmode="numeric"
+              autocomplete="cc-number"
+              placeholder="0000 0000 0000 0000"
+              aria-describedby="card-number-error"
+              data-card-number
+            />
+
+            <span class="card-brand" data-card-brand aria-label="Tarjeta">
+              <CreditCard aria-hidden="true" />
+            </span>
+          </div>
+
+          <small
+            id="card-number-error"
+            class="field-error"
+            data-card-number-error
+            aria-live="polite"
+          ></small>
+        </label>
+
+        <div class="payment-field-row">
+          <label class="payment-field">
+            <span>Vencimiento</span>
+
+            <input
+              type="text"
+              inputmode="numeric"
+              autocomplete="cc-exp"
+              placeholder="MM/YY"
+              maxlength="5"
+              aria-describedby="card-expiration-error"
+              data-card-expiration
+            />
+
+            <small
+              id="card-expiration-error"
+              class="field-error"
+              data-card-expiration-error
+              aria-live="polite"
+            ></small>
+          </label>
+
+          <label class="payment-field">
+            <span>Código de seguridad</span>
+
+            <input
+              type="password"
+              inputmode="numeric"
+              autocomplete="cc-csc"
+              placeholder="CVV"
+              maxlength="3"
+              aria-describedby="card-cvv-error"
+              data-card-cvv
+            />
+
+            <small
+              id="card-cvv-error"
+              class="field-error"
+              data-card-cvv-error
+              aria-live="polite"
+            ></small>
+          </label>
+        </div>
+
+        <label class="payment-field payment-field-full">
+          <span>Correo electrónico</span>
+
+          <input type="email" autocomplete="email" placeholder="hola@ejemplo.com" data-card-email />
+        </label>
+      </div>
+    </div>
+
+    <!-- ========================================
+     YAPE
+     ======================================== -->
+
+    <div class="payment-form" data-payment-form="yape" hidden>
+      <div class="payment-form-heading">
+        <h3>Paga con tu código de aprobación</h3>
+
+        <p>
+          Ingresa el número de celular asociado a Yape y el código de aprobación de tu operación.
+        </p>
+      </div>
+
+      <div class="payment-fields">
+        <label class="payment-field payment-field-full">
+          <span>Celular Yape</span>
+
+          <div class="phone-input">
+            <span class="phone-prefix">+51</span>
+
+            <input
+              type="tel"
+              inputmode="numeric"
+              autocomplete="tel"
+              placeholder="999 999 999"
+              aria-describedby="yape-phone-error"
+              data-yape-phone
+            />
+          </div>
+
+          <small
+            id="yape-phone-error"
+            class="field-error"
+            data-yape-phone-error
+            aria-live="polite"
+          ></small>
+        </label>
+
+        <fieldset class="yape-code-field">
+          <legend>Código de aprobación</legend>
+
+          <div class="yape-code-inputs" data-yape-code>
+            <input type="text" inputmode="numeric" maxlength="1" aria-label="Dígito 1" />
+            <input type="text" inputmode="numeric" maxlength="1" aria-label="Dígito 2" />
+            <input type="text" inputmode="numeric" maxlength="1" aria-label="Dígito 3" />
+            <input type="text" inputmode="numeric" maxlength="1" aria-label="Dígito 4" />
+            <input type="text" inputmode="numeric" maxlength="1" aria-label="Dígito 5" />
+            <input type="text" inputmode="numeric" maxlength="1" aria-label="Dígito 6" />
+          </div>
+        </fieldset>
+      </div>
+    </div>
+
+    <button type="button" class="button button-primary modal-submit" data-modal-submit>
+      Continuar al pago
+      <ArrowUpRight aria-hidden="true" />
+    </button>
+
+    <small class="secure-note">El pago todavía no se procesará en esta etapa.</small>
+  </div>
+</div>
+
+<script>
+  const modal = document.querySelector<HTMLElement>('[data-purchase-modal]');
+  const modalContent = modal?.querySelector<HTMLElement>('[data-modal-content]');
+
+  const cardNumberInput = modal?.querySelector<HTMLInputElement>('[data-card-number]');
+
+  const cardExpirationInput = modal?.querySelector<HTMLInputElement>('[data-card-expiration]');
+
+  const cardCvvInput = modal?.querySelector<HTMLInputElement>('[data-card-cvv]');
+
+  const yapePhoneInput = modal?.querySelector<HTMLInputElement>('[data-yape-phone]');
+
+  const cardBrand = modal?.querySelector<HTMLElement>('[data-card-brand]');
+
+  const cardNumberError = modal?.querySelector<HTMLElement>('[data-card-number-error]');
+
+  const cardExpirationError = modal?.querySelector<HTMLElement>('[data-card-expiration-error]');
+
+  const cardCvvError = modal?.querySelector<HTMLElement>('[data-card-cvv-error]');
+
+  const yapePhoneError = modal?.querySelector<HTMLElement>('[data-yape-phone-error]');
+
+  const packageName = modal?.querySelector<HTMLElement>('[data-package-name]');
+  const packageDescription = modal?.querySelector<HTMLElement>('[data-package-description]');
+  const packagePrice = modal?.querySelector<HTMLElement>('[data-package-price]');
+  const packageSessions = modal?.querySelector<HTMLElement>('[data-package-sessions]');
+
+  const closeButton = modal?.querySelector<HTMLButtonElement>('[data-modal-close]');
+
+  let lastFocusedElement: HTMLElement | null = null;
+
+  const onlyDigits = (value: string, maxLength: number): string => {
+    return value.replace(/\D/g, '').slice(0, maxLength);
+  };
+
+  const formatCardNumber = (value: string): string => {
+    const digits = onlyDigits(value, 19);
+
+    return digits.replace(/(\d{4})(?=\d)/g, '$1 ');
+  };
+
+  const formatPhoneNumber = (value: string): string => {
+    const digits = onlyDigits(value, 9);
+
+    return digits.replace(/(\d{3})(?=\d)/g, '$1 ');
+  };
+
+  const closeModal = () => {
+    if (!modal) return;
+
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+
+    document.body.classList.remove('modal-open');
+
+    const handleTransitionEnd = (event: TransitionEvent) => {
+      if (event.target !== modal || event.propertyName !== 'opacity') {
+        return;
+      }
+
+      modal.hidden = true;
+      modal.removeEventListener('transitionend', handleTransitionEnd);
+    };
+
+    modal.addEventListener('transitionend', handleTransitionEnd);
+
+    lastFocusedElement?.focus();
+  };
+
+  const openModal = (button: HTMLElement) => {
+    if (!modal) return;
+
+    lastFocusedElement = button;
+
+    const name = button.dataset.name ?? '';
+    const description = button.dataset.description ?? '';
+    const price = button.dataset.price ?? '';
+    const sessions = Number(button.dataset.sessions ?? 0);
+
+    if (packageName) {
+      packageName.textContent = name;
+    }
+
+    if (packageDescription) {
+      packageDescription.textContent = description;
+    }
+
+    if (packagePrice) {
+      packagePrice.textContent = `S/ ${price}`;
+    }
+
+    if (packageSessions) {
+      packageSessions.textContent =
+        sessions === 1 ? '1 sesión de 1 hora' : `${sessions} sesiones de 1 hora`;
+    }
+
+    /*
+     * Primero permitimos que el navegador renderice
+     * nuevamente el modal.
+     */
+    modal.hidden = false;
+
+    /*
+     * Esperamos un frame antes de activar la transición.
+     */
+    requestAnimationFrame(() => {
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+    });
+
+    document.body.classList.add('modal-open');
+
+    closeButton?.focus();
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-mentorship]').forEach((button) => {
+    button.addEventListener('click', () => openModal(button));
+  });
+
+  closeButton?.addEventListener('click', closeModal);
+
+  modal?.addEventListener('click', (event) => {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
+
+  modalContent?.addEventListener('click', (event) => {
+    event.stopPropagation();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && modal?.classList.contains('is-open')) {
+      closeModal();
+    }
+  });
+
+  const paymentOptions = modal?.querySelectorAll<HTMLButtonElement>('[data-payment-method]');
+
+  const paymentForms = modal?.querySelectorAll<HTMLElement>('[data-payment-form]');
+
+  paymentOptions?.forEach((option) => {
+    option.addEventListener('click', () => {
+      const selectedMethod = option.dataset.paymentMethod;
+
+      paymentOptions.forEach((item) => {
+        const selected = item === option;
+
+        item.classList.toggle('is-active', selected);
+        item.setAttribute('aria-pressed', String(selected));
+      });
+
+      paymentForms?.forEach((form) => {
+        const selected = form.dataset.paymentForm === selectedMethod;
+
+        form.hidden = !selected;
+        form.classList.toggle('is-active', selected);
+      });
+    });
+  });
+
+  const yapeCodeInputs = Array.from(
+    modal?.querySelectorAll<HTMLInputElement>('[data-yape-code] input') ?? [],
+  );
+
+  yapeCodeInputs.forEach((input, index) => {
+    input.addEventListener('input', () => {
+      input.value = input.value.replace(/\D/g, '').slice(0, 1);
+
+      if (input.value && index < yapeCodeInputs.length - 1) {
+        yapeCodeInputs[index + 1]?.focus();
+      }
+    });
+
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'Backspace' && !input.value && index > 0) {
+        yapeCodeInputs[index - 1]?.focus();
+      }
+    });
+  });
+
+  cardNumberInput?.addEventListener('input', () => {
+    const digits = onlyDigits(cardNumberInput.value, 19);
+
+    cardNumberInput.value = formatCardNumber(digits);
+
+    updateCardBrand(digits);
+
+    if (cardNumberError) {
+      cardNumberError.textContent = '';
+    }
+  });
+
+  cardNumberInput?.addEventListener('keydown', (event) => {
+    if (event.key === ' ') {
+      event.preventDefault();
+    }
+  });
+
+  type CardBrand = 'visa' | 'mastercard' | 'amex' | 'unknown';
+
+  const detectCardBrand = (cardNumber: string): CardBrand => {
+    if (/^4/.test(cardNumber)) {
+      return 'visa';
+    }
+
+    if (
+      /^(5[1-5])/.test(cardNumber) ||
+      /^(222[1-9]|22[3-9]\d|2[3-6]\d{2}|27[01]\d|2720)/.test(cardNumber)
+    ) {
+      return 'mastercard';
+    }
+
+    if (/^3[47]/.test(cardNumber)) {
+      return 'amex';
+    }
+
+    return 'unknown';
+  };
+
+  const updateCardBrand = (cardNumber: string) => {
+    if (!cardBrand) return;
+
+    const brand = detectCardBrand(cardNumber);
+
+    cardBrand.dataset.brand = brand;
+
+    switch (brand) {
+      case 'visa':
+        cardBrand.textContent = 'VISA';
+        cardBrand.setAttribute('aria-label', 'Visa');
+        break;
+
+      case 'mastercard':
+        cardBrand.innerHTML = `
+    <span class="mastercard-logo" aria-hidden="true">
+      <span class="mastercard-circle mastercard-circle-left"></span>
+      <span class="mastercard-circle mastercard-circle-right"></span>
+    </span>
+  `;
+
+        cardBrand.setAttribute('aria-label', 'Mastercard');
+        break;
+
+      case 'amex':
+        cardBrand.textContent = 'AMEX';
+        cardBrand.setAttribute('aria-label', 'American Express');
+        break;
+
+      default:
+        cardBrand.innerHTML =
+          '<svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+
+        cardBrand.setAttribute('aria-label', 'Tarjeta');
+    }
+  };
+
+  const passesLuhnCheck = (value: string): boolean => {
+    let sum = 0;
+    let shouldDouble = false;
+
+    for (let index = value.length - 1; index >= 0; index -= 1) {
+      let digit = Number(value[index]);
+
+      if (shouldDouble) {
+        digit *= 2;
+
+        if (digit > 9) {
+          digit -= 9;
+        }
+      }
+
+      sum += digit;
+      shouldDouble = !shouldDouble;
+    }
+
+    return sum % 10 === 0;
+  };
+
+  cardNumberInput?.addEventListener('blur', () => {
+    if (!cardNumberInput || !cardNumberError) return;
+
+    const number = onlyDigits(cardNumberInput.value, 19);
+
+    if (!number) {
+      cardNumberError.textContent = 'Ingresa el número de tu tarjeta.';
+      return;
+    }
+
+    if (number.length < 13 || number.length > 19) {
+      cardNumberError.textContent = 'El número de tarjeta no es válido.';
+      return;
+    }
+
+    if (!passesLuhnCheck(number)) {
+      cardNumberError.textContent = 'Verifica el número de tu tarjeta.';
+      return;
+    }
+
+    cardNumberError.textContent = '';
+  });
+
+  cardExpirationInput?.addEventListener('input', () => {
+    const digits = onlyDigits(cardExpirationInput.value, 4);
+
+    if (digits.length <= 2) {
+      cardExpirationInput.value = digits;
+    } else {
+      cardExpirationInput.value = `${digits.slice(0, 2)}/${digits.slice(2)}`;
+    }
+
+    if (cardExpirationError) {
+      cardExpirationError.textContent = '';
+    }
+  });
+
+  const isValidExpiration = (value: string): boolean => {
+    const match = value.match(/^(\d{2})\/(\d{2})$/);
+
+    if (!match) {
+      return false;
+    }
+
+    const month = Number(match[1]);
+    const year = Number(match[2]);
+
+    if (month < 1 || month > 12) {
+      return false;
+    }
+
+    const now = new Date();
+
+    const currentMonth = now.getMonth() + 1;
+    const currentYear = now.getFullYear() % 100;
+
+    if (year < currentYear) {
+      return false;
+    }
+
+    if (year === currentYear && month < currentMonth) {
+      return false;
+    }
+
+    return true;
+  };
+
+  cardExpirationInput?.addEventListener('blur', () => {
+    if (!cardExpirationInput || !cardExpirationError) return;
+
+    if (!isValidExpiration(cardExpirationInput.value)) {
+      cardExpirationError.textContent = 'Ingresa una fecha de vencimiento válida.';
+      return;
+    }
+
+    cardExpirationError.textContent = '';
+  });
+
+  cardCvvInput?.addEventListener('input', () => {
+    cardCvvInput.value = onlyDigits(cardCvvInput.value, 3);
+
+    if (cardCvvError) {
+      cardCvvError.textContent = '';
+    }
+  });
+
+  cardCvvInput?.addEventListener('blur', () => {
+    if (!cardCvvInput || !cardCvvError) return;
+
+    if (!/^\d{3}$/.test(cardCvvInput.value)) {
+      cardCvvError.textContent = 'El código de seguridad debe tener 3 dígitos.';
+      return;
+    }
+
+    cardCvvError.textContent = '';
+  });
+
+  yapePhoneInput?.addEventListener('input', () => {
+    if (!yapePhoneInput) return;
+
+    const digits = onlyDigits(yapePhoneInput.value, 9);
+
+    yapePhoneInput.value = formatPhoneNumber(digits);
+
+    if (yapePhoneError) {
+      yapePhoneError.textContent = '';
+    }
+  });
+
+  yapePhoneInput?.addEventListener('blur', () => {
+    if (!yapePhoneInput || !yapePhoneError) return;
+
+    const phoneNumber = yapePhoneInput.value.replace(/\D/g, '').slice(0, 9);
+
+    if (!/^9\d{8}$/.test(phoneNumber)) {
+      yapePhoneError.textContent = 'Ingresa un celular peruano válido de 9 dígitos.';
+      return;
+    }
+
+    yapePhoneError.textContent = '';
+  });
+</script>

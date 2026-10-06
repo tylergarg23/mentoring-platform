@@ -36,5 +36,6 @@
 
 .button-yellow {
   background: var(--secondary);
-  color: var(--secondary-foreground);
+  color: var(--foreground);
+  border-color: var(--secondary);
 }
