@@ -1,0 +1,40 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  padding: 0.9rem 1.35rem;
+
+  border-radius: 999px;
+
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  transition:
+    transform 0.25s,
+    background 0.25s;
+}
+
+.button svg,
+.text-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+.button:hover {
+  transform: translateY(-3px);
+}
+
+.button-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.button-ghost {
+  border: 1px solid #bdb6bf;
+}
+
+.button-yellow {
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+}

@@ -1,0 +1,111 @@
+---
+import { ArrowUpRight, Menu, X } from 'lucide-astro';
+---
+
+<header class="site-header" data-header>
+  <a href="/" class="brand-logo" aria-label="Ir al inicio">
+    <img src="/logo_tyg-header.svg" alt="Tyler García" />
+  </a>
+
+  <!-- Desktop navigation -->
+  <nav class="desktop-nav" aria-label="Navegación principal">
+    <a href="/#about" class="nav-link">
+      Sobre mí
+    </a>
+    <a href="/#projects" class="nav-link">
+      Proyectos
+    </a>
+    <a href="/mentorias" class="nav-link">
+      Mentoría
+    </a>
+  </nav>
+
+  <a href="/contacto" class="header-cta desktop-cta">
+    Conóceme
+    <ArrowUpRight aria-hidden="true" />
+  </a>
+
+  <!-- Mobile menu button -->
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="Abrir menú"
+    aria-expanded="false"
+    aria-controls="mobile-navigation"
+    data-menu-toggle
+  >
+    <Menu class="menu-icon" aria-hidden="true" />
+    <X class="close-icon" aria-hidden="true" />
+  </button>
+
+  <!-- Mobile navigation -->
+  <div id="mobile-navigation" class="mobile-menu" aria-hidden="true" data-mobile-menu>
+    <nav class="mobile-nav" aria-label="Navegación móvil">
+      <a href="/#about" class="mobile-nav-link" data-menu-link>
+        <span>01</span>
+        Sobre mí
+      </a>
+
+      <a href="/#projects" class="mobile-nav-link" data-menu-link>
+        <span>02</span>
+        Proyectos
+      </a>
+
+      <a href="/mentorias" class="mobile-nav-link" data-menu-link>
+        <span>03</span>
+        Mentoría
+      </a>
+
+      <a href="/contacto" class="mobile-nav-link" data-menu-link>
+        <span>04</span>
+        Contáctame
+      </a>
+    </nav>
+
+    <div class="mobile-menu-footer">
+      <span>QA AUTOMATION</span>
+      <span>FRONTEND</span>
+      <span>MENTOR</span>
+    </div>
+  </div>
+</header>
+
+<script>
+  const menuToggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const mobileMenu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+  const menuLinks = document.querySelectorAll<HTMLElement>('[data-menu-link]');
+
+  const setMenuState = (isOpen: boolean) => {
+    if (!menuToggle || !mobileMenu) return;
+
+    menuToggle.setAttribute('aria-expanded', String(isOpen));
+    menuToggle.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+
+    mobileMenu.setAttribute('aria-hidden', String(!isOpen));
+    mobileMenu.classList.toggle('is-open', isOpen);
+
+    document.body.classList.toggle('menu-open', isOpen);
+  };
+
+  menuToggle?.addEventListener('click', () => {
+    const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+
+    setMenuState(!isOpen);
+  });
+
+  menuLinks.forEach((link) => {
+    link.addEventListener('click', () => setMenuState(false));
+  });
+
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      setMenuState(false);
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 760) {
+      setMenuState(false);
+    }
+  });
+</script>

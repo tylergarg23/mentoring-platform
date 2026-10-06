@@ -1,0 +1,55 @@
+---
+import { Code2, Play, Sparkles } from 'lucide-astro';
+
+import { skills } from '../../data/home';
+
+const icons = {
+  code: Code2,
+  sparkles: Sparkles,
+  play: Play,
+};
+---
+
+<section class="skills-section" aria-labelledby="skills-title">
+  <div class="skills-container">
+    <div class="section-kicker skills-kicker">/ 02 — LO QUE HAGO</div>
+
+    <div class="skills-heading">
+      <h2 id="skills-title">
+        Tres formas de
+        <br />
+        <span>hacerlo posible.</span>
+      </h2>
+
+      <p>
+        De la calidad del software al desarrollo y la mentoría, combino experiencia técnica y
+        criterio para construir mejores productos y ayudar a otras personas a crecer.
+      </p>
+    </div>
+
+    <div class="skills-grid">
+      {skills.map((skill, index) => {
+        const Icon = icons[skill.icon];
+
+        return (
+          <article class="skill-card">
+            <div class="skill-top">
+              <span class="skill-index">0{index + 1}</span>
+
+              <Icon aria-hidden="true" />
+            </div>
+
+            <div class="skill-content">
+              <h3>{skill.title}</h3>
+              <p>{skill.copy}</p>
+            </div>
+
+            <span class="skill-arrow" aria-hidden="true">
+              ↗
+            </span>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
