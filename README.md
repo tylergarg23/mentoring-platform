@@ -16,10 +16,11 @@ Actualmente incluye:
 - Validación de solicitudes con Zod.
 - Generación de vistas previas de órdenes con precios definidos en el backend.
 - Pruebas unitarias con Vitest.
-- Configuración de Prisma y conexión local a PostgreSQL.
+- Configuración de Prisma 7.10.0 y conexión local a PostgreSQL.
+- Esquema de datos definido para mentorías, órdenes e intentos de pago.
 - Adaptador Node.js de Astro para ejecutar endpoints dinámicos.
 
-**Pendiente:** persistencia de órdenes, carga inicial del catálogo, integración real de pagos, confirmación mediante webhooks y despliegue en producción.
+**Pendiente:** verificar la aplicación de las migraciones de los tres modelos, persistencia de órdenes, carga inicial del catálogo, integración real de pagos, confirmación mediante webhooks y despliegue en producción.
 
 ## Tecnologías
 
@@ -43,22 +44,30 @@ El proyecto sigue una arquitectura de monolito modular, con separación de respo
 ```text
 src/
 ├── components/
-│   └── mentorship/
+│   ├── common/
+│   ├── home/
+│   ├── mentorship/
+│   └── ui/
 ├── data/
 ├── generated/
 │   └── prisma/
 ├── modules/
+│   ├── contact/
 │   ├── mentorship/
-│   └── order/
+│   ├── order/
 │       ├── schemas/
 │       └── services/
+│   └── payment/
 ├── pages/
 │   └── api/
 │       └── orders.ts
 └── styles/
 
 prisma/
+├── migrations/
 └── schema.prisma
+
+prisma.config.ts
 ```
 
 La estructura continuará evolucionando con repositorios, servicios de aplicación e integraciones de pago.
@@ -95,7 +104,11 @@ No subir credenciales reales al repositorio.
 
 ## Base de datos
 
-Crear previamente una base de datos PostgreSQL llamada `mentoring_db`.
+Crear previamente una base de datos PostgreSQL llamada `mentoring_db` (por ejemplo, desde pgAdmin 4). El archivo `prisma.config.ts` carga la conexión desde `DATABASE_URL`.
+
+El esquema define tres modelos: `Mentorship`, `Order` y `Payment`, con relaciones 1:N entre mentorías y órdenes y entre órdenes e intentos de pago. Los estados se modelan con los enums `OrderStatus`, `PaymentStatus` y `PaymentMethod`.
+
+**Importante:** la existencia de los modelos en `schema.prisma` no demuestra por sí sola que sus tablas estén creadas en la base de datos. Verificar las migraciones locales y las tablas antes de usar la persistencia.
 
 Validar el esquema:
 
@@ -121,7 +134,7 @@ Para crear una nueva migración durante el desarrollo:
 npx prisma migrate dev --name nombre_del_cambio
 ```
 
-Las migraciones deben versionarse junto con el código fuente.
+Las migraciones deben versionarse junto con el código fuente. Para producción se utilizará `npx prisma migrate deploy`, no `migrate dev`.
 
 ## Desarrollo
 
@@ -188,7 +201,7 @@ Respuesta de vista previa:
 }
 ```
 
-**Nota:** la API actual devuelve una vista previa. No registra una compra ni realiza cobros. El catálogo actual de precios todavía se encuentra en el servicio de órdenes.
+**Nota:** la API actual devuelve una vista previa. No registra una compra ni realiza cobros. El catálogo actual de precios todavía se encuentra en el servicio de órdenes. En la respuesta actual `amount: 120` representa S/ 120; para persistencia se ha previsto almacenar importes en céntimos (`12000`). Es necesario unificar esa convención antes de guardar órdenes.
 
 ## Seguridad
 
@@ -200,7 +213,7 @@ Respuesta de vista previa:
 
 ## Próximas etapas
 
-- Completar los modelos y migraciones de `Mentorship`, `Order` y `Payment`.
+- Verificar y aplicar las migraciones de `Mentorship`, `Order` y `Payment` en PostgreSQL.
 - Insertar los paquetes de mentoría en PostgreSQL.
 - Implementar repositorios y persistencia de órdenes.
 - Agregar pruebas de integración.
@@ -213,4 +226,8 @@ Respuesta de vista previa:
 
 Desarrollo actual en la rama `feature/frontend-foundation`.
 
-Los cambios deben pasar las validaciones de calidad antes de integrarse en `main`.
+Los cambios deben pasar las validaciones de calidad antes de integrarse en `main`. Nunca versionar `.env`, contraseñas ni datos sensibles.
+
+## Notas de despliegue
+
+La aplicación requiere un hosting que ejecute Node.js para las rutas dinámicas de Astro y una instancia de PostgreSQL accesible mediante `DATABASE_URL`. Antes de habilitar cobros, será necesario integrar un proveedor de pagos, verificar sus webhooks y definir un flujo idempotente de confirmación. No se requiere Docker para el desarrollo local.
