@@ -150,7 +150,20 @@ import { ArrowUpRight, CreditCard, Smartphone, X } from 'lucide-astro';
         <label class="payment-field payment-field-full">
           <span>Correo electrónico</span>
 
-          <input type="email" autocomplete="email" placeholder="hola@ejemplo.com" data-card-email />
+          <input
+            type="email"
+            autocomplete="email"
+            placeholder="hola@ejemplo.com"
+            aria-describedby="card-email-error"
+            data-card-email
+          />
+
+          <small
+            id="card-email-error"
+            class="field-error"
+            data-card-email-error
+            aria-live="polite"
+          ></small>
         </label>
       </div>
     </div>
@@ -204,6 +217,7 @@ import { ArrowUpRight, CreditCard, Smartphone, X } from 'lucide-astro';
             <input type="text" inputmode="numeric" maxlength="1" aria-label="Dígito 5" />
             <input type="text" inputmode="numeric" maxlength="1" aria-label="Dígito 6" />
           </div>
+          <small class="field-error" data-yape-code-error aria-live="polite"></small>
         </fieldset>
       </div>
     </div>
@@ -227,6 +241,8 @@ import { ArrowUpRight, CreditCard, Smartphone, X } from 'lucide-astro';
 
   const cardCvvInput = modal?.querySelector<HTMLInputElement>('[data-card-cvv]');
 
+  const cardEmailInput = modal?.querySelector<HTMLInputElement>('[data-card-email]');
+
   const yapePhoneInput = modal?.querySelector<HTMLInputElement>('[data-yape-phone]');
 
   const cardBrand = modal?.querySelector<HTMLElement>('[data-card-brand]');
@@ -237,7 +253,11 @@ import { ArrowUpRight, CreditCard, Smartphone, X } from 'lucide-astro';
 
   const cardCvvError = modal?.querySelector<HTMLElement>('[data-card-cvv-error]');
 
+  const cardEmailError = modal?.querySelector<HTMLElement>('[data-card-email-error]');
+
   const yapePhoneError = modal?.querySelector<HTMLElement>('[data-yape-phone-error]');
+
+  const yapeCodeError = modal?.querySelector<HTMLElement>('[data-yape-code-error]');
 
   const packageName = modal?.querySelector<HTMLElement>('[data-package-name]');
   const packageDescription = modal?.querySelector<HTMLElement>('[data-package-description]');
@@ -246,7 +266,11 @@ import { ArrowUpRight, CreditCard, Smartphone, X } from 'lucide-astro';
 
   const closeButton = modal?.querySelector<HTMLButtonElement>('[data-modal-close]');
 
+  const submitButton = modal?.querySelector<HTMLButtonElement>('[data-modal-submit]');
+
   let lastFocusedElement: HTMLElement | null = null;
+
+  let selectedMentorshipId = '';
 
   const onlyDigits = (value: string, maxLength: number): string => {
     return value.replace(/\D/g, '').slice(0, maxLength);
@@ -291,10 +315,13 @@ import { ArrowUpRight, CreditCard, Smartphone, X } from 'lucide-astro';
 
     lastFocusedElement = button;
 
+    const mentorshipId = button.dataset.mentorship ?? '';
     const name = button.dataset.name ?? '';
     const description = button.dataset.description ?? '';
     const price = button.dataset.price ?? '';
     const sessions = Number(button.dataset.sessions ?? 0);
+
+    selectedMentorshipId = mentorshipId;
 
     if (packageName) {
       packageName.textContent = name;
@@ -358,9 +385,17 @@ import { ArrowUpRight, CreditCard, Smartphone, X } from 'lucide-astro';
 
   const paymentForms = modal?.querySelectorAll<HTMLElement>('[data-payment-form]');
 
+  type PaymentMethod = 'card' | 'yape';
+
+  let selectedPaymentMethod: PaymentMethod = 'card';
+
   paymentOptions?.forEach((option) => {
     option.addEventListener('click', () => {
       const selectedMethod = option.dataset.paymentMethod;
+
+      if (selectedMethod === 'card' || selectedMethod === 'yape') {
+        selectedPaymentMethod = selectedMethod;
+      }
 
       paymentOptions.forEach((item) => {
         const selected = item === option;
@@ -385,6 +420,9 @@ import { ArrowUpRight, CreditCard, Smartphone, X } from 'lucide-astro';
   yapeCodeInputs.forEach((input, index) => {
     input.addEventListener('input', () => {
       input.value = input.value.replace(/\D/g, '').slice(0, 1);
+      if (yapeCodeError) {
+        yapeCodeError.textContent = '';
+      }
 
       if (input.value && index < yapeCodeInputs.length - 1) {
         yapeCodeInputs[index + 1]?.focus();
@@ -616,5 +654,248 @@ import { ArrowUpRight, CreditCard, Smartphone, X } from 'lucide-astro';
     }
 
     yapePhoneError.textContent = '';
+  });
+
+  // ========================================
+  // VALIDACIONES DEL BOTÓN CONTINUAR
+  // ========================================
+
+  const validateCardNumber = (): boolean => {
+    if (!cardNumberInput || !cardNumberError) {
+      return false;
+    }
+
+    const cardNumber = onlyDigits(cardNumberInput.value, 19);
+
+    if (!cardNumber) {
+      cardNumberError.textContent = 'Ingresa el número de tu tarjeta.';
+
+      return false;
+    }
+
+    if (cardNumber.length < 13 || cardNumber.length > 19) {
+      cardNumberError.textContent = 'El número de tarjeta no es válido.';
+
+      return false;
+    }
+
+    if (!passesLuhnCheck(cardNumber)) {
+      cardNumberError.textContent = 'Verifica el número de tu tarjeta.';
+
+      return false;
+    }
+
+    cardNumberError.textContent = '';
+
+    return true;
+  };
+
+  const validateCardExpiration = (): boolean => {
+    if (!cardExpirationInput || !cardExpirationError) {
+      return false;
+    }
+
+    if (!cardExpirationInput.value) {
+      cardExpirationError.textContent = 'Ingresa la fecha de vencimiento.';
+
+      return false;
+    }
+
+    if (!isValidExpiration(cardExpirationInput.value)) {
+      cardExpirationError.textContent = 'Ingresa una fecha de vencimiento válida.';
+
+      return false;
+    }
+
+    cardExpirationError.textContent = '';
+
+    return true;
+  };
+
+  const validateCardCvv = (): boolean => {
+    if (!cardCvvInput || !cardCvvError) {
+      return false;
+    }
+
+    const cvv = onlyDigits(cardCvvInput.value, 3);
+
+    if (!cvv) {
+      cardCvvError.textContent = 'Ingresa el código de seguridad.';
+
+      return false;
+    }
+
+    if (!/^\d{3}$/.test(cvv)) {
+      cardCvvError.textContent = 'El código de seguridad debe tener 3 dígitos.';
+
+      return false;
+    }
+
+    cardCvvError.textContent = '';
+
+    return true;
+  };
+
+  const validateCardEmail = (): boolean => {
+    if (!cardEmailInput || !cardEmailError) {
+      return false;
+    }
+
+    const email = cardEmailInput.value.trim();
+
+    if (!email) {
+      cardEmailError.textContent = 'Ingresa tu correo electrónico.';
+
+      return false;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+      cardEmailError.textContent = 'Ingresa un correo electrónico válido.';
+
+      return false;
+    }
+
+    cardEmailError.textContent = '';
+
+    return true;
+  };
+
+  const validateYapePhone = (): boolean => {
+    if (!yapePhoneInput || !yapePhoneError) {
+      return false;
+    }
+
+    const phoneNumber = onlyDigits(yapePhoneInput.value, 9);
+
+    if (!phoneNumber) {
+      yapePhoneError.textContent = 'Ingresa tu número de celular.';
+
+      return false;
+    }
+
+    if (!/^9\d{8}$/.test(phoneNumber)) {
+      yapePhoneError.textContent = 'Ingresa un celular peruano válido de 9 dígitos.';
+
+      return false;
+    }
+
+    yapePhoneError.textContent = '';
+
+    return true;
+  };
+
+  const validateYapeCode = (): boolean => {
+    if (!yapeCodeError) {
+      return false;
+    }
+
+    const code = yapeCodeInputs.map((input) => onlyDigits(input.value, 1)).join('');
+
+    if (!code) {
+      yapeCodeError.textContent = 'Ingresa tu código de aprobación.';
+
+      return false;
+    }
+
+    if (!/^\d{6}$/.test(code)) {
+      yapeCodeError.textContent = 'El código de aprobación debe tener 6 dígitos.';
+
+      return false;
+    }
+
+    yapeCodeError.textContent = '';
+
+    return true;
+  };
+
+  const validateCardPayment = (): boolean => {
+    const cardNumberValid = validateCardNumber();
+
+    const expirationValid = validateCardExpiration();
+
+    const cvvValid = validateCardCvv();
+
+    const emailValid = validateCardEmail();
+
+    return cardNumberValid && expirationValid && cvvValid && emailValid;
+  };
+
+  const validateYapePayment = (): boolean => {
+    const phoneValid = validateYapePhone();
+
+    const codeValid = validateYapeCode();
+
+    return phoneValid && codeValid;
+  };
+
+  cardEmailInput?.addEventListener('input', () => {
+    if (cardEmailError) {
+      cardEmailError.textContent = '';
+    }
+  });
+
+  cardEmailInput?.addEventListener('blur', validateCardEmail);
+
+  submitButton?.addEventListener('click', async () => {
+    let isValid = false;
+
+    if (selectedPaymentMethod === 'card') {
+      isValid = validateCardPayment();
+    }
+
+    if (selectedPaymentMethod === 'yape') {
+      isValid = validateYapePayment();
+    }
+
+    if (!isValid) {
+      return;
+    }
+
+    if (!selectedMentorshipId) {
+      console.error('No se pudo identificar la mentoría seleccionada.');
+
+      return;
+    }
+
+    const orderRequest = {
+      mentorshipId: selectedMentorshipId,
+      paymentMethod: selectedPaymentMethod,
+    };
+
+    console.log('Datos que enviaremos al backend:', orderRequest);
+
+    try {
+      if (submitButton) {
+        submitButton.disabled = true;
+      }
+
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+
+        headers: {
+          'Content-Type': 'application/json',
+        },
+
+        body: JSON.stringify(orderRequest),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        console.error('No se pudo crear la orden:', result);
+
+        return;
+      }
+
+      console.log('Respuesta del backend:', result);
+    } catch (error) {
+      console.error('Error comunicándose con el backend:', error);
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+      }
+    }
   });
 </script>

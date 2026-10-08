@@ -1,121 +1,216 @@
 # Mentoring Platform
 
-Plataforma web para presentar y comercializar servicios de mentoría profesional.
-
-El proyecto permitirá consultar información sobre las mentorías disponibles, contactar al mentor y adquirir mentorías mediante diferentes métodos de pago.
+Plataforma web personal desarrollada con Astro y TypeScript para presentar servicios profesionales, proyectos y paquetes de mentoría, con un proceso de adquisición mediante tarjeta o Yape.
 
 ## Estado del proyecto
 
-🚧 En desarrollo.
+**En desarrollo — versión inicial (MVP).**
 
-Actualmente el proyecto se encuentra en la fase de configuración y definición de su arquitectura base.
+Actualmente incluye:
 
-## Stack tecnológico
+- Sitio web responsive con páginas informativas.
+- Página de mentorías con los paquetes Brújula, Impulso y Evolución.
+- Modal de adquisición con selección de método de pago.
+- Validaciones de formularios en el frontend.
+- Endpoint `POST /api/orders`.
+- Validación de solicitudes con Zod.
+- Generación de vistas previas de órdenes con precios definidos en el backend.
+- Pruebas unitarias con Vitest.
+- Configuración de Prisma y conexión local a PostgreSQL.
+- Adaptador Node.js de Astro para ejecutar endpoints dinámicos.
 
-### Frontend
+**Pendiente:** persistencia de órdenes, carga inicial del catálogo, integración real de pagos, confirmación mediante webhooks y despliegue en producción.
 
-- Astro
-- TypeScript
-- Tailwind CSS
+## Tecnologías
 
-### Backend
-
-Inicialmente utilizaremos las capacidades server-side de Astro dentro de un monolito modular.
-
-La arquitectura permitirá separar el backend en el futuro, por ejemplo utilizando NestJS, si la complejidad del sistema lo requiere.
-
-### Base de datos
-
-- PostgreSQL
-- Prisma ORM
-
-### Testing
-
-- Vitest
-- V8 Coverage
-
-Posteriormente se incorporarán pruebas de integración, API y E2E.
+| Tecnología        | Propósito                    |
+| ----------------- | ---------------------------- |
+| Astro 7           | Framework web                |
+| TypeScript        | Tipado estático              |
+| Tailwind CSS 4    | Estilos                      |
+| Node.js 24        | Entorno de ejecución         |
+| Zod               | Validación de datos          |
+| Vitest            | Pruebas unitarias            |
+| PostgreSQL        | Base de datos relacional     |
+| Prisma 7.10.0     | ORM y migraciones            |
+| Lucide Astro      | Iconografía                  |
+| ESLint y Prettier | Calidad y formato del código |
 
 ## Arquitectura
 
-El proyecto utiliza inicialmente una arquitectura de **Monolito Modular**, aplicando de manera pragmática principios de Clean Architecture.
+El proyecto sigue una arquitectura de monolito modular, con separación de responsabilidades y principios SOLID aplicados de manera pragmática.
 
-Los principales módulos de negocio serán:
+```text
+src/
+├── components/
+│   └── mentorship/
+├── data/
+├── generated/
+│   └── prisma/
+├── modules/
+│   ├── mentorship/
+│   └── order/
+│       ├── schemas/
+│       └── services/
+├── pages/
+│   └── api/
+│       └── orders.ts
+└── styles/
 
-- Mentorship
-- Contact
-- Order
-- Payment
+prisma/
+└── schema.prisma
+```
 
-La aplicación buscará mantener separadas las responsabilidades entre:
+La estructura continuará evolucionando con repositorios, servicios de aplicación e integraciones de pago.
 
-1. Presentation
-2. Application
-3. Domain
-4. Infrastructure
+## Requisitos
 
-### Principios de diseño
+- Node.js 24
+- npm
+- PostgreSQL instalado y ejecutándose
+- Git
 
-El desarrollo seguirá los principios SOLID:
+## Instalación local
 
-- Single Responsibility Principle
-- Open/Closed Principle
-- Liskov Substitution Principle
-- Interface Segregation Principle
-- Dependency Inversion Principle
+Clonar el repositorio:
 
-También se aplicarán:
+```bash
+git clone https://github.com/tylergarg23/mentoring-platform.git
+cd mentoring-platform
+```
 
-- DRY
-- KISS
-- YAGNI
-- Separation of Concerns
+Instalar dependencias:
 
-Estos principios se aplicarán de forma pragmática, evitando abstracciones innecesarias y sobrearquitectura.
+```bash
+npm install
+```
 
-## Patrones de diseño
+Crear el archivo `.env` a partir de `.env.example` y configurar:
 
-Dependiendo de las necesidades de cada módulo se utilizarán patrones como:
+```dotenv
+DATABASE_URL="postgresql://USUARIO:PASSWORD@localhost:5432/mentoring_db?schema=public"
+```
 
-- Repository Pattern
-- Service Pattern
-- Adapter Pattern
-- Dependency Injection
+No subir credenciales reales al repositorio.
 
-Los patrones se introducirán únicamente cuando resuelvan un problema concreto del sistema.
+## Base de datos
 
-## Metodología
+Crear previamente una base de datos PostgreSQL llamada `mentoring_db`.
 
-El proyecto seguirá un enfoque Agile utilizando Kanban y desarrollo iterativo e incremental.
+Validar el esquema:
 
-Flujo de trabajo:
+```bash
+npx prisma validate
+```
 
-Backlog → To Do → In Progress → Testing → Done
+Aplicar las migraciones existentes:
 
-Cada funcionalidad debe entregar un incremento funcional y verificable.
+```bash
+npx prisma migrate dev
+```
 
-## Definition of Done
+Generar el cliente:
 
-Una funcionalidad se considera terminada cuando:
+```bash
+npx prisma generate
+```
 
-- Cumple los criterios funcionales definidos.
-- TypeScript/Astro Check no reporta errores.
-- ESLint no reporta errores.
-- Prettier está correctamente aplicado.
-- Las reglas de negocio relevantes tienen pruebas.
-- Las validaciones necesarias están implementadas.
-- Se revisaron consideraciones de seguridad.
-- El proyecto compila correctamente.
-- La documentación relevante fue actualizada.
+Para crear una nueva migración durante el desarrollo:
 
-## Quality Gate
+```bash
+npx prisma migrate dev --name nombre_del_cambio
+```
 
-Antes de integrar cambios se ejecutarán:
+Las migraciones deben versionarse junto con el código fuente.
+
+## Desarrollo
+
+Iniciar el servidor:
+
+```bash
+npm run dev
+```
+
+## Calidad de código
 
 ```bash
 npm run check
 npm run lint
 npm run format:check
 npm test
+```
+
+Las últimas pruebas unitarias reportadas finalizaron correctamente: **10 pruebas aprobadas en 3 archivos**.
+
+## Build de producción
+
+```bash
 npm run build
 ```
+
+Ejecutar el servidor generado:
+
+```bash
+node ./dist/server/entry.mjs
+```
+
+El proyecto utiliza el adaptador Node.js de Astro para soportar rutas dinámicas.
+
+## API
+
+### POST /api/orders
+
+Recibe el identificador de la mentoría y el método de pago.
+
+Ejemplo:
+
+```json
+{
+  "mentorshipId": "brujula",
+  "paymentMethod": "yape"
+}
+```
+
+Respuesta de vista previa:
+
+```json
+{
+  "success": true,
+  "message": "Vista previa de orden generada correctamente.",
+  "data": {
+    "mentorshipId": "brujula",
+    "mentorshipName": "Brújula",
+    "amount": 120,
+    "currency": "PEN",
+    "paymentMethod": "yape",
+    "status": "PREVIEW"
+  }
+}
+```
+
+**Nota:** la API actual devuelve una vista previa. No registra una compra ni realiza cobros. El catálogo actual de precios todavía se encuentra en el servicio de órdenes.
+
+## Seguridad
+
+- Validación de solicitudes en el servidor.
+- Precios determinados por el backend.
+- Variables sensibles fuera del repositorio.
+- Sin almacenamiento de números completos de tarjetas, CVV ni códigos de autorización de Yape.
+- Los pagos deberán confirmarse mediante un proveedor y webhooks verificados.
+
+## Próximas etapas
+
+- Completar los modelos y migraciones de `Mentorship`, `Order` y `Payment`.
+- Insertar los paquetes de mentoría en PostgreSQL.
+- Implementar repositorios y persistencia de órdenes.
+- Agregar pruebas de integración.
+- Integrar una pasarela de pagos.
+- Implementar webhooks e idempotencia.
+- Configurar CI con GitHub Actions.
+- Desplegar la aplicación y la base de datos en producción.
+
+## Control de versiones
+
+Desarrollo actual en la rama `feature/frontend-foundation`.
+
+Los cambios deben pasar las validaciones de calidad antes de integrarse en `main`.

@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+  EXPIRED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CARD
+  YAPE
+}
+
+model Mentorship {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  name        String
+  description String
+  price       Int
+  sessions    Int
+  isActive    Boolean  @default(true)
+
+  orders      Order[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id            String      @id @default(uuid())
+
+  mentorshipId  String
+  mentorship    Mentorship  @relation(fields: [mentorshipId], references: [id])
+
+  amount        Int
+  currency      String      @default("PEN")
+  status        OrderStatus @default(PENDING)
+
+  customerEmail String?
+  payments      Payment[]
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([mentorshipId])
+  @@index([status])
+}
+
+model Payment {
+  id                String        @id @default(uuid())
+
+  orderId           String
+  order             Order         @relation(fields: [orderId], references: [id])
+
+  provider          String
+  providerPaymentId String?       @unique
+  method            PaymentMethod
+  status            PaymentStatus @default(PENDING)
+
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([orderId])
+}
