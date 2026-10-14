@@ -1,4 +1,6 @@
 import type { CreateOrderInput } from '../schemas/order.schema';
+import type { MentorshipRepository } from '../../mentorship/repositories/mentorship.repository';
+import type { OrderRepository } from '../repositories/order.repository';
 
 export interface OrderPreview {
   mentorshipId: string;
@@ -9,30 +11,47 @@ export interface OrderPreview {
   status: 'PREVIEW';
 }
 
-const mentorshipCatalog = {
-  brujula: {
-    name: 'Brújula',
-    price: 120,
-  },
-  impulso: {
-    name: 'Impulso',
-    price: 220,
-  },
-  evolucion: {
-    name: 'Evolución',
-    price: 390,
-  },
-} as const;
+export class MentorshipNotAvailableError extends Error {
+  constructor() {
+    super('La mentoría solicitada no existe o no está disponible.');
+    this.name = 'MentorshipNotAvailableError';
+  }
+}
 
-export const previewOrder = (input: CreateOrderInput): OrderPreview => {
-  const mentorship = mentorshipCatalog[input.mentorshipId];
+export class OrderService {
+  constructor(
+    private readonly mentorshipRepository: MentorshipRepository,
+    private readonly orderRepository: OrderRepository,
+  ) {}
 
-  return {
-    mentorshipId: input.mentorshipId,
-    mentorshipName: mentorship.name,
-    amount: mentorship.price,
-    currency: 'PEN',
-    paymentMethod: input.paymentMethod,
-    status: 'PREVIEW',
-  };
-};
+  async previewOrder(input: CreateOrderInput): Promise<OrderPreview> {
+    const mentorship = await this.mentorshipRepository.findBySlug(input.mentorshipId);
+
+    if (!mentorship || !mentorship.isActive) {
+      throw new MentorshipNotAvailableError();
+    }
+
+    return {
+      mentorshipId: mentorship.slug,
+      mentorshipName: mentorship.name,
+      amount: mentorship.price / 100,
+      currency: 'PEN',
+      paymentMethod: input.paymentMethod,
+      status: 'PREVIEW',
+    };
+  }
+
+  async createOrder(input: CreateOrderInput) {
+    const mentorship = await this.mentorshipRepository.findBySlug(input.mentorshipId);
+
+    if (!mentorship || !mentorship.isActive) {
+      throw new MentorshipNotAvailableError();
+    }
+
+    return this.orderRepository.create({
+      mentorshipId: mentorship.id,
+      amount: mentorship.price,
+      currency: 'PEN',
+    });
+  }
+}

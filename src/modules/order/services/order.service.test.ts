@@ -1,37 +1,110 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { previewOrder } from './order.service';
+import type { MentorshipRepository } from '../../mentorship/repositories/mentorship.repository';
+import type { OrderRepository } from '../repositories/order.repository';
 
-describe('OrderService - previewOrder', () => {
-  it('debe devolver el precio correcto de Brújula', () => {
-    const result = previewOrder({
+import { MentorshipNotAvailableError, OrderService } from './order.service';
+
+describe('OrderService', () => {
+  const createMentorshipRepository = (): MentorshipRepository => ({
+    findBySlug: vi.fn().mockResolvedValue({
+      id: 'mentorship-test-001',
+      slug: 'brujula',
+      name: 'Brújula',
+      description: 'Mentoría de prueba',
+      price: 12000,
+      sessions: 1,
+      isActive: true,
+    }),
+  });
+
+  const createOrderRepository = (): OrderRepository => ({
+    create: vi.fn().mockResolvedValue({
+      id: 'order-test-001',
+      mentorshipId: 'mentorship-test-001',
+      amount: 12000,
+      currency: 'PEN',
+      status: 'PENDING',
+      createdAt: new Date('2026-10-13T00:00:00.000Z'),
+    }),
+  });
+
+  it('debe generar una vista previa con el precio correcto', async () => {
+    const service = new OrderService(createMentorshipRepository(), createOrderRepository());
+
+    const result = await service.previewOrder({
       mentorshipId: 'brujula',
       paymentMethod: 'yape',
     });
 
     expect(result.amount).toBe(120);
-    expect(result.currency).toBe('PEN');
     expect(result.status).toBe('PREVIEW');
-    expect(result.paymentMethod).toBe('yape');
   });
 
-  it('debe devolver el precio correcto de Impulso', () => {
-    const result = previewOrder({
-      mentorshipId: 'impulso',
-      paymentMethod: 'card',
+  it('debe crear una orden pendiente en el repositorio', async () => {
+    const mentorshipRepository = createMentorshipRepository();
+    const orderRepository = createOrderRepository();
+
+    const service = new OrderService(mentorshipRepository, orderRepository);
+
+    const result = await service.createOrder({
+      mentorshipId: 'brujula',
+      paymentMethod: 'yape',
     });
 
-    expect(result.amount).toBe(220);
-    expect(result.mentorshipName).toBe('Impulso');
+    expect(result.status).toBe('PENDING');
+    expect(result.amount).toBe(12000);
+
+    expect(orderRepository.create).toHaveBeenCalledWith({
+      mentorshipId: 'mentorship-test-001',
+      amount: 12000,
+      currency: 'PEN',
+    });
   });
 
-  it('debe devolver el precio correcto de Evolución', () => {
-    const result = previewOrder({
-      mentorshipId: 'evolucion',
-      paymentMethod: 'card',
-    });
+  it('debe rechazar una mentoría inexistente', async () => {
+    const mentorshipRepository: MentorshipRepository = {
+      findBySlug: vi.fn().mockResolvedValue(null),
+    };
 
-    expect(result.amount).toBe(390);
-    expect(result.mentorshipName).toBe('Evolución');
+    const orderRepository = createOrderRepository();
+
+    const service = new OrderService(mentorshipRepository, orderRepository);
+
+    await expect(
+      service.createOrder({
+        mentorshipId: 'brujula',
+        paymentMethod: 'card',
+      }),
+    ).rejects.toBeInstanceOf(MentorshipNotAvailableError);
+
+    expect(orderRepository.create).not.toHaveBeenCalled();
+  });
+
+  it('debe rechazar una mentoría inactiva', async () => {
+    const mentorshipRepository: MentorshipRepository = {
+      findBySlug: vi.fn().mockResolvedValue({
+        id: 'mentorship-test-001',
+        slug: 'brujula',
+        name: 'Brújula',
+        description: 'Mentoría de prueba',
+        price: 12000,
+        sessions: 1,
+        isActive: false,
+      }),
+    };
+
+    const orderRepository = createOrderRepository();
+
+    const service = new OrderService(mentorshipRepository, orderRepository);
+
+    await expect(
+      service.createOrder({
+        mentorshipId: 'brujula',
+        paymentMethod: 'yape',
+      }),
+    ).rejects.toBeInstanceOf(MentorshipNotAvailableError);
+
+    expect(orderRepository.create).not.toHaveBeenCalled();
   });
 });
