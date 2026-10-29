@@ -1,0 +1,115 @@
+---
+import { ArrowLeft, ArrowRight, Quote } from 'lucide-astro';
+
+import { testimonials } from '../../data/home';
+---
+
+<section class="testimonials-section" aria-labelledby="testimonials-title">
+  <div class="testimonials-container">
+    <div class="section-kicker testimonials-kicker">/ 04 — TESTIMONIOS</div>
+
+    <div class="testimonials-heading">
+      <h2 id="testimonials-title">
+        Lo que dicen
+        <br />
+        <span>de mi trabajo.</span>
+      </h2>
+
+      <p>
+        Experiencias compartidas por personas con las que he tenido la oportunidad de trabajar,
+        colaborar o compartir conocimiento.
+      </p>
+    </div>
+
+    <div class="testimonials-carousel" data-testimonials>
+      <div class="testimonials-track">
+        {testimonials.map((testimonial, index) => (
+          <article
+            class="testimonial-slide"
+            data-testimonial
+            aria-hidden={index === 0 ? 'false' : 'true'}
+          >
+            <Quote class="testimonial-quote-icon" aria-hidden="true" />
+
+            <blockquote>
+              <p>“{testimonial.quote}”</p>
+            </blockquote>
+
+            <footer class="testimonial-author">
+              <strong>{testimonial.name}</strong>
+              <span>{testimonial.role}</span>
+            </footer>
+          </article>
+        ))}
+      </div>
+
+      <div class="testimonials-controls">
+        <div class="testimonial-counter" aria-live="polite">
+          <span data-current>01</span>
+          <span>/</span>
+          <span>{String(testimonials.length).padStart(2, '0')}</span>
+        </div>
+
+        <div class="testimonial-buttons">
+          <button
+            type="button"
+            class="testimonial-button"
+            data-previous
+            aria-label="Ver testimonio anterior"
+          >
+            <ArrowLeft aria-hidden="true" />
+          </button>
+
+          <button
+            type="button"
+            class="testimonial-button"
+            data-next
+            aria-label="Ver siguiente testimonio"
+          >
+            <ArrowRight aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const carousels = document.querySelectorAll<HTMLElement>('[data-testimonials]');
+
+  carousels.forEach((carousel) => {
+    const slides = Array.from(carousel.querySelectorAll<HTMLElement>('[data-testimonial]'));
+    const previousButton = carousel.querySelector<HTMLButtonElement>('[data-previous]');
+    const nextButton = carousel.querySelector<HTMLButtonElement>('[data-next]');
+    const currentCounter = carousel.querySelector<HTMLElement>('[data-current]');
+
+    let currentIndex = 0;
+
+    const showSlide = (index: number) => {
+      slides.forEach((slide, slideIndex) => {
+        const isActive = slideIndex === index;
+
+        slide.classList.toggle('is-active', isActive);
+        slide.setAttribute('aria-hidden', String(!isActive));
+      });
+
+      if (currentCounter) {
+        currentCounter.textContent = String(index + 1).padStart(2, '0');
+      }
+    };
+
+    previousButton?.addEventListener('click', () => {
+      currentIndex = currentIndex === 0 ? slides.length - 1 : currentIndex - 1;
+
+      showSlide(currentIndex);
+    });
+
+    nextButton?.addEventListener('click', () => {
+      currentIndex = currentIndex === slides.length - 1 ? 0 : currentIndex + 1;
+
+      showSlide(currentIndex);
+    });
+
+    showSlide(currentIndex);
+  });
+</script>

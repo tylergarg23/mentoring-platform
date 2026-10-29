@@ -1,0 +1,25 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+
+import MentorshipHero from '../../components/mentorship/MentorshipHero.astro';
+import MentorshipBenefits from '../../components/mentorship/MentorshipBenefits.astro';
+import MentorshipStyle from '../../components/mentorship/MentorshipStyle.astro';
+import MentorshipNote from '../../components/mentorship/MentorshipNote.astro';
+
+import ServicesPackages from '../../components/services/ServicesPackages.astro';
+import QePurchaseModal from '../../components/services/QePurchaseModal.astro';
+---
+
+<MainLayout
+  title="Servicios | Tyler García"
+  description="Servicios de desarrollo web y asesoría en Quality Engineering."
+>
+  <div class="mentorship-page">
+    <MentorshipHero />
+    <ServicesPackages />
+    <MentorshipBenefits />
+    <MentorshipStyle />
+    <MentorshipNote />
+  </div>
+  <QePurchaseModal />
+</MainLayout>

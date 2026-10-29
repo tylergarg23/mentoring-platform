@@ -1,0 +1,96 @@
+---
+import '../../styles/services.css';
+import { ArrowUpRight, Check, Layers3, Sparkles } from 'lucide-astro';
+
+import { services, getServiceWhatsAppUrl } from '../../data/services';
+
+const formatPrice = (price: number) => `S/ ${price.toLocaleString('en-US')}`;
+---
+
+<section id="servicios" class="mentorship-section" aria-labelledby="services-title">
+  <div class="section-kicker">/ ELIGE TU PRÓXIMO PASO</div>
+
+  <h2 id="services-title" class="mentorship-heading">
+    Un servicio
+    <br />
+    <span>hecho para tu etapa.</span>
+  </h2>
+
+  <div class="mt-8 flex flex-wrap gap-3">
+    <span class="border border-[#d9cbdc] px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-[#60366b]">
+      Desarrollo web
+    </span>
+
+    <span class="border border-[#d9cbdc] px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-[#60366b]">
+      Asesoría en QE
+    </span>
+  </div>
+
+  <div class="services-package-grid mt-8">
+    {services.map((item) => {
+      const isWeb = item.category === 'web';
+
+      return (
+        <article
+          class:list={[
+            'service-package-card',
+            {
+              'featured-package': item.featured,
+              'qe-package': !isWeb,
+            },
+          ]}
+        >
+          <div class="package-top">
+            <span>{item.number}</span>
+            {isWeb ? <Sparkles size={18} /> : <Layers3 size={18} />}
+          </div>
+
+          <h3>{item.name}</h3>
+
+          <div class="package-price">
+            {isWeb && <small class="starting-at">Desde</small>}
+            {formatPrice(item.price)}
+            <small>/ {isWeb ? 'proyecto' : 'hora'}</small>
+          </div>
+
+          <p>{item.description}</p>
+
+          <ul class="service-features">
+            {item.features.map((feature) => (
+              <li>
+                <Check size={14} aria-hidden="true" />
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div class="audience">
+            <span>IDEAL PARA</span>
+            <strong>{item.audience}</strong>
+          </div>
+
+          {isWeb ? (
+            <a
+              href={getServiceWhatsAppUrl(item)}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="button button-primary package-button"
+            >
+              Adquirir servicio
+              <ArrowUpRight aria-hidden="true" />
+            </a>
+          ) : (
+            <button
+              type="button"
+              class="button button-primary package-button"
+              data-qe-service={item.id}
+            >
+              Adquirir servicio
+              <ArrowUpRight aria-hidden="true" />
+            </button>
+          )}
+        </article>
+      );
+    })}
+  </div>
+</section>

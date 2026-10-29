@@ -1,0 +1,55 @@
+---
+import { ArrowUpRight } from 'lucide-astro';
+
+import { projects } from '../../data/home';
+---
+
+<section id="projects" class="projects-section section-shell" aria-labelledby="projects-title">
+  <div class="section-kicker">/ 03 — PROYECTOS SELECCIONADOS</div>
+
+  <div class="projects-header">
+    <h2 id="projects-title">
+      Trabajo que habla
+      <br />
+      <span>por sí solo.</span>
+    </h2>
+
+    <p class="projects-intro">
+      Una selección de experiencias donde tecnología, calidad y diseño trabajan juntas para resolver
+      problemas reales.
+    </p>
+  </div>
+
+  <div class="projects-list">
+    {projects.map((project) => (
+      <article class="project-card">
+        <div class="project-visual" aria-hidden="true">
+          <span class="project-number">{project.number}</span>
+
+          <div class="project-shape">
+            <span>{project.title}</span>
+          </div>
+        </div>
+
+        <div class="project-info">
+          <p class="project-type">{project.type}</p>
+
+          <h3>{project.title}</h3>
+
+          <p class="project-description">{project.description}</p>
+
+          <ul class="project-tags" aria-label={`Tecnologías de ${project.title}`}>
+            {project.tags.map((tag) => (
+              <li>{tag}</li>
+            ))}
+          </ul>
+
+          <span class="project-link-placeholder" aria-hidden="true">
+            Ver proyecto
+            <ArrowUpRight />
+          </span>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>

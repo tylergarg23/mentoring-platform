@@ -1,0 +1,46 @@
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+}
+
+:root {
+  color-scheme: light;
+
+  --background: #f6f3ee;
+  --foreground: #191522;
+
+  --card: #ffffff;
+  --card-foreground: #191522;
+
+  --primary: #5c3469;
+  --primary-foreground: #ffffff;
+
+  --secondary: #ffe15b;
+  --secondary-foreground: #191522;
+
+  --muted: #ece8e3;
+  --muted-foreground: #6e6874;
+
+  --accent: #ffe15b;
+  --accent-foreground: #191522;
+
+  --border: #ded9d2;
+  --ring: #5c3469;
+
+  --radius: 1rem;
+}

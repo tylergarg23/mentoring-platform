@@ -1,0 +1,25 @@
+---
+import { mentorshipValues } from '../../data/mentorship';
+---
+
+<section class="mentorship-section style-section" aria-labelledby="mentorship-style-title">
+  <div class="section-kicker">/ MI FORMA DE ACOMPAÑAR</div>
+
+  <h2 id="mentorship-style-title" class="mentorship-heading">
+    El estilo importa.
+    <br />
+    <span>Siempre.</span>
+  </h2>
+
+  <div class="style-grid">
+    {mentorshipValues.map((value) => (
+      <article class="style-card">
+        <span>{value.number}</span>
+
+        <h3>{value.title}</h3>
+
+        <p>{value.description}</p>
+      </article>
+    ))}
+  </div>
+</section>

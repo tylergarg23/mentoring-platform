@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+  EXPIRED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CARD
+  YAPE
+}
+
+model Mentorship {
+  id          String  @id @default(uuid())
+  slug        String  @unique
+  name        String
+  description String
+  price       Int
+  sessions    Int
+  isActive    Boolean @default(true)
+
+  orders Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id          String @id @default(uuid())
+  slug        String @unique
+  name        String
+  description String
+  category    String
+
+  // Precio por hora expresado en céntimos
+  price Int
+
+  isActive Boolean @default(true)
+
+  orders Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id String @id @default(uuid())
+
+  // Compatibilidad temporal con mentorías
+  mentorshipId String?
+  mentorship   Mentorship? @relation(fields: [mentorshipId], references: [id])
+
+  // Nuevo catálogo de servicios
+  serviceId String?
+  service   Service? @relation(fields: [serviceId], references: [id])
+
+  // Cantidad de horas contratadas
+  hours Int?
+
+  // Precio unitario en céntimos
+  unitPrice Int?
+
+  // Importe total en céntimos
+  amount Int
+
+  currency String      @default("PEN")
+  status   OrderStatus @default(PENDING)
+
+  customerEmail String?
+  customerPhone String?
+
+  payments Payment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([mentorshipId])
+  @@index([serviceId])
+  @@index([status])
+}
+
+model Payment {
+  id String @id @default(uuid())
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  provider          String
+  providerPaymentId String?       @unique
+  method            PaymentMethod
+  status            PaymentStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([orderId])
+}

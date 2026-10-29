@@ -1,0 +1,24 @@
+---
+import MentorshipBenefits from '../../components/mentorship/MentorshipBenefits.astro';
+import MentorshipHero from '../../components/mentorship/MentorshipHero.astro';
+import MentorshipNote from '../../components/mentorship/MentorshipNote.astro';
+import MentorshipPackages from '../../components/mentorship/MentorshipPackages.astro';
+import MentorshipStyle from '../../components/mentorship/MentorshipStyle.astro';
+import MainLayout from '../../layouts/MainLayout.astro';
+import MentorshipPurchaseModal from '../../components/mentorship/MentorshipPurchaseModal.astro';
+---
+
+<MainLayout
+  title="Mentorías | Tyler García"
+  description="Mentoría personalizada para profesionales que buscan claridad, crecimiento y una ruta profesional con intención."
+>
+  <div class="mentorship-page">
+    <MentorshipHero />
+    <MentorshipPackages />
+    <MentorshipBenefits />
+    <MentorshipStyle />
+    <MentorshipNote />
+  </div>
+
+  <MentorshipPurchaseModal />
+</MainLayout>
