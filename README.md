@@ -24,18 +24,20 @@ Actualmente incluye:
 
 ## Tecnologías
 
-| Tecnología        | Propósito                    |
-| ----------------- | ---------------------------- |
-| Astro 7           | Framework web                |
-| TypeScript        | Tipado estático              |
-| Tailwind CSS 4    | Estilos                      |
-| Node.js 24        | Entorno de ejecución         |
-| Zod               | Validación de datos          |
-| Vitest            | Pruebas unitarias            |
-| PostgreSQL        | Base de datos relacional     |
-| Prisma 7.10.0     | ORM y migraciones            |
-| Lucide Astro      | Iconografía                  |
-| ESLint y Prettier | Calidad y formato del código |
+| Tecnología         | Uso                                                                   |
+| ------------------ | --------------------------------------------------------------------- |
+| Astro 7            | Framework web y páginas                                               |
+| TypeScript         | Tipado estático                                                       |
+| Tailwind CSS 4     | Estilos                                                               |
+| Node.js 24         | Desarrollo y ejecución de rutas dinámicas                             |
+| Lucide Astro       | Iconografía                                                           |
+| Zod                | Validación de datos de API                                            |
+| Vitest             | Pruebas unitarias                                                     |
+| PostgreSQL         | Base de datos prevista para funciones dinámicas                       |
+| Prisma 7.10.0      | Modelos y migraciones                                                 |
+| ESLint y Prettier  | Calidad y formato                                                     |
+| `@astrojs/node`    | Adaptador para endpoints del servidor                                 |
+| `@astrojs/sitemap` | Generación de sitemap, si la integración está instalada y configurada |
 
 ## Arquitectura
 
@@ -47,26 +49,32 @@ src/
 │   ├── common/
 │   ├── home/
 │   ├── mentorship/
+│   ├── services/
 │   └── ui/
 ├── data/
-├── generated/
-│   └── prisma/
+├── layouts/
+│   └── MainLayout.astro
 ├── modules/
-│   ├── contact/
-│   ├── mentorship/
-│   ├── order/
-│       ├── schemas/
-│       └── services/
-│   └── payment/
 ├── pages/
-│   └── api/
-│       └── orders.ts
+│   ├── api/
+│   │   └── orders.ts
+│   ├── hablemos/
+│   │   └── index.astro
+│   └── ...
+├── scripts/
+│   ├── contact-form.ts
+│   └── qe-purchase-modal.ts
 └── styles/
+    ├── global.css
+    ├── tokens.css
+    ├── contact.css
+    └── services.css
 
 prisma/
 ├── migrations/
 └── schema.prisma
 
+astro.config.mjs
 prisma.config.ts
 ```
 
@@ -86,6 +94,7 @@ Clonar el repositorio:
 ```bash
 git clone https://github.com/tylergarg23/mentoring-platform.git
 cd mentoring-platform
+npm run dev
 ```
 
 Instalar dependencias:
@@ -227,6 +236,16 @@ Respuesta de vista previa:
 Desarrollo actual en la rama `feature/frontend-foundation`.
 
 Los cambios deben pasar las validaciones de calidad antes de integrarse en `main`. Nunca versionar `.env`, contraseñas ni datos sensibles.
+
+Antes de publicar cambios:
+
+```bash
+git branch --show-current
+git status
+git add README.md
+git commit -m "docs: refresh README for portfolio and SEO roadmap"
+git push -u origin feature/developer
+```
 
 ## Notas de despliegue
 
