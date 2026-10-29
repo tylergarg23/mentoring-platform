@@ -1,0 +1,98 @@
+---
+import Layout from '../../layouts/MainLayout.astro';
+import { ArrowUpRight, MessageCircle, Send } from 'lucide-astro';
+
+import '../../styles/contact.css';
+---
+
+<Layout
+  title="Hablemos | tygar.dev"
+  description="¿Tienes un proyecto en mente? Conversemos sobre desarrollo web, aplicaciones y calidad de software."
+>
+  <section class="contact-page">
+    <div class="contact-container">
+      <div class="section-kicker">/ INICIAR UN PROYECTO</div>
+
+      <div class="contact-layout">
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="contact-content">
+          <h1>
+            Hagamos algo
+            <br />
+            <em>inolvidable.</em>
+          </h1>
+
+          <p class="large-copy">
+            Cuéntame sobre tu idea, tu reto o simplemente lo que te gustaría explorar. Te responderé
+            pronto para que empecemos a darle forma.
+          </p>
+
+          <div class="contact-direct">
+            <MessageCircle size={22} strokeWidth={1.7} aria-hidden="true" />
+
+            <span>
+              También puedes escribirme directamente
+              <br />
+              <a href="https://wa.me/51997890845" target="_blank" rel="noopener noreferrer">
+                Hablemos por WhatsApp
+                <ArrowUpRight size={15} aria-hidden="true" />
+              </a>
+            </span>
+          </div>
+        </div>
+
+        <!-- COLUMNA DERECHA -->
+        <form id="contact-project-form" class="contact-form">
+          <label>
+            Tu nombre
+            <input
+              type="text"
+              name="name"
+              placeholder="¿Cómo te llamas?"
+              autocomplete="name"
+              maxlength="100"
+              required
+            />
+          </label>
+
+          <label>
+            Tu email
+            <input
+              type="email"
+              name="email"
+              placeholder="tu@email.com"
+              autocomplete="email"
+              maxlength="254"
+              required
+            />
+          </label>
+
+          <label>
+            Cuéntame un poco
+            <textarea
+              name="message"
+              placeholder="¿Qué tienes en mente?"
+              rows="4"
+              minlength="10"
+              maxlength="2000"
+              required
+            ></textarea>
+          </label>
+
+          <p id="contact-form-error" class="contact-form-error" role="alert" hidden></p>
+
+          <button type="submit" class="button button-primary contact-submit">
+            Enviar mensaje
+            <Send size={17} aria-hidden="true" />
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import { initializeContactForm } from '../../scripts/contact-form';
+
+  initializeContactForm();
+</script>

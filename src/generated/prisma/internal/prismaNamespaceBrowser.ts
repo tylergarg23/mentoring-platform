@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Mentorship: 'Mentorship',
+  Service: 'Service',
   Order: 'Order',
   Payment: 'Payment'
 } as const
@@ -87,13 +88,32 @@ export const MentorshipScalarFieldEnum = {
 export type MentorshipScalarFieldEnum = (typeof MentorshipScalarFieldEnum)[keyof typeof MentorshipScalarFieldEnum]
 
 
+export const ServiceScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  description: 'description',
+  category: 'category',
+  price: 'price',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
+
+
 export const OrderScalarFieldEnum = {
   id: 'id',
   mentorshipId: 'mentorshipId',
+  serviceId: 'serviceId',
+  hours: 'hours',
+  unitPrice: 'unitPrice',
   amount: 'amount',
   currency: 'currency',
   status: 'status',
   customerEmail: 'customerEmail',
+  customerPhone: 'customerPhone',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

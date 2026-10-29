@@ -23,6 +23,11 @@ export * from './enums.ts';
  */
 export type Mentorship = Prisma.MentorshipModel
 /**
+ * Model Service
+ * 
+ */
+export type Service = Prisma.ServiceModel
+/**
  * Model Order
  * 
  */

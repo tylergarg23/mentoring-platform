@@ -450,9 +450,9 @@ export type MentorshipSumOrderByAggregateInput = {
   sessions?: Prisma.SortOrder
 }
 
-export type MentorshipScalarRelationFilter = {
-  is?: Prisma.MentorshipWhereInput
-  isNot?: Prisma.MentorshipWhereInput
+export type MentorshipNullableScalarRelationFilter = {
+  is?: Prisma.MentorshipWhereInput | null
+  isNot?: Prisma.MentorshipWhereInput | null
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -481,10 +481,12 @@ export type MentorshipCreateNestedOneWithoutOrdersInput = {
   connect?: Prisma.MentorshipWhereUniqueInput
 }
 
-export type MentorshipUpdateOneRequiredWithoutOrdersNestedInput = {
+export type MentorshipUpdateOneWithoutOrdersNestedInput = {
   create?: Prisma.XOR<Prisma.MentorshipCreateWithoutOrdersInput, Prisma.MentorshipUncheckedCreateWithoutOrdersInput>
   connectOrCreate?: Prisma.MentorshipCreateOrConnectWithoutOrdersInput
   upsert?: Prisma.MentorshipUpsertWithoutOrdersInput
+  disconnect?: Prisma.MentorshipWhereInput | boolean
+  delete?: Prisma.MentorshipWhereInput | boolean
   connect?: Prisma.MentorshipWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.MentorshipUpdateToOneWithWhereWithoutOrdersInput, Prisma.MentorshipUpdateWithoutOrdersInput>, Prisma.MentorshipUncheckedUpdateWithoutOrdersInput>
 }

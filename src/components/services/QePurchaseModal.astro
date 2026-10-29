@@ -1,0 +1,202 @@
+---
+import { X, CreditCard, Smartphone } from 'lucide-astro';
+---
+
+<dialog id="qe-purchase-modal" aria-labelledby="qe-modal-title" class="qe-modal">
+  <div class="qe-modal-content">
+    <div class="qe-modal-header">
+      <div>
+        <span class="qe-modal-kicker">/ ASESORÍA EN QUALITY ENGINEERING</span>
+        <h2 id="qe-modal-title">Adquiere tu capacitación</h2>
+      </div>
+
+      <button type="button" id="qe-modal-close" class="qe-modal-close" aria-label="Cerrar ventana">
+        <X size={20} />
+      </button>
+    </div>
+
+    <div class="qe-modal-body">
+      <div id="qe-checkout-form">
+        <div class="qe-selected-service">
+          <span>SERVICIO SELECCIONADO</span>
+          <h3 id="qe-service-name">QE funcional</h3>
+          <p id="qe-service-description"></p>
+        </div>
+
+        <div class="qe-hours-section">
+          <label for="qe-hours">Cantidad de horas</label>
+
+          <div class="qe-hours-control">
+            <button type="button" id="qe-hours-decrease" aria-label="Disminuir horas">
+              −
+            </button>
+
+            <input id="qe-hours" type="number" min="1" max="40" step="1" value="1" />
+
+            <button type="button" id="qe-hours-increase" aria-label="Aumentar horas">
+              +
+            </button>
+          </div>
+
+          <small>Selecciona entre 1 y 40 horas.</small>
+        </div>
+
+        <div class="qe-price-summary">
+          <div>
+            <span>Precio por hora</span>
+            <strong id="qe-hourly-price">S/ 180</strong>
+          </div>
+
+          <div>
+            <span>Horas seleccionadas</span>
+            <strong id="qe-hours-summary">1 hora</strong>
+          </div>
+
+          <div class="qe-total-row">
+            <span>Total a pagar</span>
+            <strong id="qe-total-price">S/ 180</strong>
+          </div>
+        </div>
+
+        <div class="qe-customer-fields">
+          <h3>Datos de contacto</h3>
+
+          <div class="qe-form-field">
+            <label for="qe-customer-email">
+              Correo electrónico
+              <span class="qe-required">*</span>
+            </label>
+
+            <input
+              id="qe-customer-email"
+              name="customerEmail"
+              type="email"
+              placeholder="ejemplo@correo.com"
+              autocomplete="email"
+              maxlength="254"
+              required
+              aria-describedby="qe-email-error"
+            />
+
+            <small id="qe-email-error" class="qe-field-error" hidden>
+              Ingresa un correo electrónico válido.
+            </small>
+          </div>
+
+          <div class="qe-form-field">
+            <label for="qe-customer-phone">
+              Teléfono
+              <span class="qe-optional">(opcional)</span>
+            </label>
+
+            <input
+              id="qe-customer-phone"
+              name="customerPhone"
+              type="tel"
+              placeholder="Ej. 987654321"
+              autocomplete="tel"
+              maxlength="20"
+            />
+          </div>
+        </div>
+
+        <div class="qe-payment-methods">
+          <h3>Coordinación y pago</h3>
+
+          <div class="qe-payment-option qe-payment-option-active">
+            <Smartphone size={20} />
+            <div>
+              <strong>WhatsApp + Yape</strong>
+              <span>
+                Coordina tu capacitación y realiza el pago directamente con nuestro equipo.
+              </span>
+            </div>
+          </div>
+
+          <div class="qe-payment-option qe-payment-option-disabled">
+            <CreditCard size={20} />
+            <div>
+              <strong>Tarjeta de crédito o débito</strong>
+              <span>Muy pronto disponible</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="qe-payment-notice">
+          Al continuar, serás redirigido a WhatsApp con los datos de tu solicitud. Coordinaremos
+          contigo la disponibilidad, las fechas, los horarios y el pago mediante Yape. La
+          contratación quedará sujeta a confirmación.
+        </p>
+
+        <p id="qe-checkout-error" class="qe-field-error" role="alert" hidden></p>
+
+        <button type="button" id="qe-continue-payment" class="qe-checkout-button">
+          Continuar por WhatsApp
+        </button>
+
+        <small class="qe-checkout-hint">
+          No se realizará ningún cobro automático. Podrás revisar tu solicitud antes de enviarla.
+        </small>
+      </div>
+
+      <section
+        id="qe-payment-confirmation"
+        class="qe-payment-confirmation"
+        aria-labelledby="qe-confirmation-title"
+        hidden
+      >
+        <span class="qe-modal-kicker">/ SOLICITUD REGISTRADA</span>
+
+        <h3 id="qe-confirmation-title">Tu solicitud fue registrada</h3>
+
+        <p>Hemos creado tu orden correctamente. El pago aún está pendiente de verificación.</p>
+
+        <div class="qe-price-summary">
+          <div>
+            <span>Número de orden</span>
+            <strong id="qe-confirmation-order-id" class="qe-order-id"></strong>
+          </div>
+
+          <div>
+            <span>Servicio</span>
+            <strong id="qe-confirmation-service"></strong>
+          </div>
+
+          <div>
+            <span>Horas</span>
+            <strong id="qe-confirmation-hours"></strong>
+          </div>
+
+          <div class="qe-total-row">
+            <span>Total pendiente</span>
+            <strong id="qe-confirmation-total"></strong>
+          </div>
+        </div>
+
+        <div class="qe-yape-instructions">
+          <h4>Pago mediante Yape</h4>
+
+          <p>
+            Conserva el número de orden. Las instrucciones para realizar el pago estarán disponibles
+            aquí cuando configuremos el QR oficial de Yape.
+          </p>
+        </div>
+
+        <p class="qe-payment-notice">
+          Tu pago estará sujeto a verificación. Nos comunicaremos contigo mediante el correo o
+          teléfono registrado para coordinar las fechas y horarios de tu capacitación.
+        </p>
+
+        <button type="button" id="qe-confirmation-close" class="qe-checkout-button">
+          Entendido
+        </button>
+      </section>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  import { initializeQePurchaseModal } from '../../scripts/qe-purchase-modal';
+
+  initializeQePurchaseModal();
+</script>
