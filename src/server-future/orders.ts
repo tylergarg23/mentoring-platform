@@ -1,20 +1,20 @@
 import type { APIRoute } from 'astro';
 
-import { prisma } from '../../lib/prisma';
+import { prisma } from '../lib/prisma';
 
-import { PrismaMentorshipRepository } from '../../modules/mentorship/repositories/prisma-mentorship.repository';
+import { PrismaMentorshipRepository } from '../modules/mentorship/repositories/prisma-mentorship.repository';
 
-import { PrismaServiceRepository } from '../../modules/services/repositories/prisma-service.repository';
+import { PrismaServiceRepository } from '../modules/services/repositories/prisma-service.repository';
 
-import { PrismaOrderRepository } from '../../modules/order/repositories/prisma-order.repository';
+import { PrismaOrderRepository } from '../modules/order/repositories/prisma-order.repository';
 
-import { createOrderSchema } from '../../modules/order/schemas/order.schema';
+import { createOrderSchema } from '../modules/order/schemas/order.schema';
 
 import {
   MentorshipNotAvailableError,
   ServiceNotAvailableError,
   OrderService,
-} from '../../modules/order/services/order.service';
+} from '../modules/order/services/order.service';
 
 export const prerender = false;
 
