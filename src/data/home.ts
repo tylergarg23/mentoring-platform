@@ -60,15 +60,15 @@ export const skills = [
 export const testimonials = [
   {
     quote:
-      'Trabajar con Fabián fue sumar criterio, energía y una mirada que elevó el producto completo.',
-    name: 'Mariana López',
-    role: 'Product Lead · Nómada',
+      'Trabajar con Tyler fue sumar criterio, energía y una mirada que elevó el producto completo.',
+    name: 'Fausto DG',
+    role: 'Gerente · Estación DG',
   },
   {
     quote:
       'Su manera de unir calidad y estética hizo que el equipo construyera mejor, no solo más rápido.',
     name: 'Carlos Méndez',
-    role: 'Engineering Manager · Loop',
+    role: 'Engineering Manager',
   },
   {
     quote: 'Como mentor, convierte lo complejo en pasos accionables. Salí con mucha más claridad.',

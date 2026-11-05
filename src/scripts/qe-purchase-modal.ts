@@ -1,7 +1,7 @@
 import { services } from '../data/services';
 
 // Número de WhatsApp de contacto (Perú)
-const WHATSAPP_NUMBER = '51997890843';
+const WHATSAPP_NUMBER = '51997890845';
 
 export function initializeQePurchaseModal(): void {
   const modal = document.querySelector<HTMLDialogElement>('#qe-purchase-modal');
