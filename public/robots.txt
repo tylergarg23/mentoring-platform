@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tygar.dev/sitemap-index.xml

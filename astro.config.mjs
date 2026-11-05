@@ -1,12 +1,14 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
-import node from '@astrojs/node';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  adapter: node({
-    mode: 'standalone',
-  }),
+  site: 'https://tygar.dev',
+
+  output: 'static',
+
+  integrations: [sitemap()],
 
   vite: {
     plugins: [tailwindcss()],
