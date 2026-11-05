@@ -15,19 +15,29 @@ import { projects } from '../../data/home';
     </h2>
 
     <p class="projects-intro">
-      Una selección de experiencias donde tecnología, calidad y diseño trabajan juntas para resolver
-      problemas reales.
+      Una selección de mis más recientes experiencias donde tecnología, calidad y diseño trabajan
+      juntas para resolver problemas reales.
     </p>
   </div>
 
   <div class="projects-list">
     {projects.map((project) => (
       <article class="project-card">
-        <div class="project-visual" aria-hidden="true">
-          <span class="project-number">{project.number}</span>
+        <div class:list={['project-visual', project.className]}>
+          <span class="project-number" aria-hidden="true">
+            {project.number}
+          </span>
 
-          <div class="project-shape">
-            <span>{project.title}</span>
+          <div class="project-image-wrapper">
+            <img
+              src={project.image}
+              alt={project.imageAlt}
+              class="project-image"
+              loading="lazy"
+              decoding="async"
+              width="1200"
+              height="750"
+            />
           </div>
         </div>
 
@@ -44,10 +54,18 @@ import { projects } from '../../data/home';
             ))}
           </ul>
 
-          <span class="project-link-placeholder" aria-hidden="true">
-            Ver proyecto
-            <ArrowUpRight />
-          </span>
+          {project.url ? (
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="project-link-placeholder"
+              aria-label={`Ver proyecto ${project.title} (abre en una nueva pestaña)`}
+            >
+              Ver proyecto
+              <ArrowUpRight aria-hidden="true" />
+            </a>
+          ) : null}
         </div>
       </article>
     ))}
