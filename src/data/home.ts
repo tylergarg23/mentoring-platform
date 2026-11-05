@@ -3,28 +3,39 @@
 export const projects = [
   {
     number: '01',
-    title: 'Nexa Finance',
-    type: 'WEB APP / QA AUTOMATION',
-    description: 'Una experiencia financiera clara, rápida y segura para tomar mejores decisiones.',
+    title: 'Acymas Iglesia',
+    type: 'SITE WEB / RESPONSIVE',
+    description:
+      'Un sitio web responsive para la iglesia Acymas, con un diseño moderno y funcional que refleja su identidad.',
     className: 'project-purple',
-    tags: ['Frontend', 'Automation'],
+    image: '/images/projects/acymas.webp',
+    imageAlt: 'Vista previa del sitio web Acymas Iglesia',
+    url: 'https://acymas.org/', // Coloca aquí la URL real de Pulse Mobile
+    tags: ['Frontend', 'Backend', 'Web design'],
   },
   {
     number: '02',
-    title: 'Casa Nómada',
-    type: 'E-COMMERCE / BRAND',
+    title: 'Estación DG',
+    type: 'SITE WEB / RESTAURANT',
     description:
-      'Un storefront editorial que convierte la identidad de marca en una experiencia digital.',
+      'Un restaurant con identidad propia y un sitio web que refleja su esencia, con un diseño moderno y funcional.',
     className: 'project-yellow',
-    tags: ['Web design', 'React'],
+    image: '/images/projects/estacion-dg.webp',
+    imageAlt: 'Vista previa del sitio web Estación DG',
+    url: 'https://estaciondg.com/', // Coloca aquí la URL real de Pulse Mobile
+    tags: ['Web design', 'WordPress'],
   },
   {
     number: '03',
-    title: 'Pulse Mobile',
-    type: 'MOBILE APP / PRODUCT',
-    description: 'Sistema de hábitos que hace visible el progreso sin añadir fricción.',
+    title: 'Elepic Perú',
+    type: 'SITE WEB / PRODUCT',
+    description:
+      'Una Compañía de Integración de Procesos Electrónicos dedicada a ofrecer soluciones tecnológicas innovadoras.',
     className: 'project-dark',
-    tags: ['Product', 'Testing'],
+    image: '/images/projects/elepic.webp',
+    imageAlt: 'Vista previa del sitio web Elepic Perú',
+    url: 'https://elepicperu.com/', // Coloca aquí la URL real de Pulse Mobile
+    tags: ['Product', 'Web design'],
   },
 ];
 

@@ -1525,3 +1525,77 @@
     height: 340px;
   }
 }
+
+/* ========================================
+   PROJECTS - IMAGE PREVIEW
+======================================== */
+
+.project-visual {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.project-image-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.project-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+
+  transition:
+    transform 650ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 450ms ease;
+
+  will-change: transform;
+}
+
+/* Mantener visible el número */
+.project-number {
+  position: relative;
+  z-index: 3;
+}
+
+/* Efecto hover */
+@media (hover: hover) {
+  .project-visual:hover .project-image {
+    transform: scale(1.07);
+  }
+}
+
+/* Accesibilidad: reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .project-image {
+    transition: none;
+    will-change: auto;
+  }
+
+  .project-visual:hover .project-image {
+    transform: none;
+  }
+}
+
+/* BOTON VER PROYECTO */
+.project-link-placeholder {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.project-link-placeholder:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 5px;
+  border-radius: 3px;
+}
